@@ -52,4 +52,5 @@ router.get('/:urlTitle', function (req, res, next) {
       res.json(foundPage);
     })
     .catch(next);
+    res.render("wikipage");
 });
