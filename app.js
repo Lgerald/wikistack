@@ -5,9 +5,11 @@ var nunjucks = require("nunjucks");
 var fs = require("fs");
 var path = require("path");
 var models = require("./models");
+var routes = require("./routes");
 
 var app = express();
 
+app.use(morgan('dev'));
 
 // point nunjucks to the directory containing templates and turn off caching; configure returns an Environment 
 // instance, which we'll want to use to add Markdown support later.
@@ -17,7 +19,12 @@ app.set("view engine", "html");
 // when res.render works with html files, have it use nunjucks to do so
 app.engine("html", nunjucks.render);
 
+app.use(bodyParser.urlencoded({ extended: true })); // for HTML form submits
+app.use(bodyParser.json()); // would be for AJAX requests
+
 app.use(express.static(path.join(__dirname, "/stylesheets")));
+
+app.use('/', routes);
 
 // make sure you are exporting your db from your models file
 models.db.sync({ force: true })
